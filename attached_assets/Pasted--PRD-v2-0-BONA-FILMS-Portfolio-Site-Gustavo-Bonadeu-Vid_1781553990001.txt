@@ -1,0 +1,1058 @@
+# PRD v2.0 — BONA FILMS
+## Portfolio Site | Gustavo Bonadeu (Videomaker)
+
+> **VERSÃO 2.0** — Correções aplicadas após primeiro build no Replit.
+> Este documento substitui inteiramente o v1. Não usar o anterior como referência.
+
+---
+
+## CHANGELOG v1 → v2
+
+| # | Correção |
+|---|---|
+| 01 | **Hero refeita do zero.** Especificação pixel-by-pixel do título sobrepondo a foto. Adicionados micro-textos editoriais em volta (inspiração James Holt). Foto agora é MENOR que o título (era o inverso no v1). |
+| 02 | **Tudo em PT-BR.** Toda copy, labels, headlines e UI traduzidos. |
+| 03 | **"Videomaker", não "diretor".** Removidas todas as menções a "direção", "directed by", "creative direction". Substituído por "videomaker", "criado por", "filmado por". |
+| 04 | **Vídeos todos 16:9.** Grid Selected Work refeito com aspect ratio uniforme (era 16:9 / 4:5 / 21:9 no v1). |
+| 05 | **Header: botão WhatsApp em vez de coordenada.** Coordenada move pro footer (continua como detalhe editorial discreto). |
+| 06 | **Inspiração James Holt incorporada.** Grid lines sutis visíveis como background. Micro-textos editoriais espalhados em colunas na hero. Estética mais "documento de portfolio" do que "site comercial". |
+
+---
+
+## 0. RESUMO EXECUTIVO
+
+**Cliente:** Gustavo Bonadeu — videomaker e criador de reels
+**Marca:** BONA FILMS (produtora audiovisual)
+**Idioma:** Português brasileiro (PT-BR)
+**Tipo:** Single page portfolio (one-pager)
+**Tom visual:** Editorial, artístico, preto-e-branco premium. Referências diretas: Tukiko Miku (hero/composição) + James Holt (grid editorial + micro-textos).
+**Tom da copy:** Direto, frases curtas, vibe cinematográfica. Sem "pacotes", "valores", "investimento". Sem palavras como "diretor", "direção".
+
+**Stack:** Next.js 14 + Tailwind + Framer Motion + Lenis. MP4 self-hosted.
+
+**Estrutura final (6 seções):**
+1. Hero (capa editorial com nome sobreposto à foto)
+2. Marquee (faixa de transição)
+3. Sobre (quem é o Gustavo)
+4. Reel (vídeo destaque principal)
+5. Trabalhos selecionados (grid dos 3 vídeos restantes em 16:9)
+6. Processo (3 pilares — sem linguagem de venda)
+7. Contato (Instagram + WhatsApp)
+
+---
+
+## 1. STACK TÉCNICA
+
+Idêntica ao v1. Mantida.
+
+| Item | Especificação |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Estilo | Tailwind CSS v3 |
+| Fontes | Inter + JetBrains Mono (Google Fonts) |
+| Vídeos | MP4 self-hosted em `/public/videos/` — H.264, CRF 23, max 10MB cada |
+| Player | HTML5 `<video>` nativo com controles customizados |
+| Animações | Framer Motion |
+| Smooth scroll | Lenis |
+| Ícones | Lucide React |
+| Deploy | Vercel |
+
+---
+
+## 2. DESIGN SYSTEM
+
+### 2.1 Paleta de Cores (mantida do v1)
+
+```
+COR                    | HEX        | USO
+-----------------------|------------|--------------------------------------------
+Background base        | #F2F2EE    | Fundo principal (off-white quente)
+Background alt         | #0A0A0A    | Seções escuras (Reel, Processo)
+Black absolute         | #000000    | Foto hero, blocos pretos puros, tipografia primária
+Text primary           | #0A0A0A    | Texto sobre fundo claro
+Text on dark           | #F2F2EE    | Texto sobre fundo escuro
+Text muted             | #6B6B66    | Labels, metadados, captions
+Border subtle          | #D4D4CE    | Divisores sobre fundo claro
+Border subtle dark     | #1F1F1F    | Divisores sobre fundo escuro
+Grid line              | rgba(10,10,10,0.04) | Linhas verticais do grid editorial (NOVO no v2)
+```
+
+### 2.2 Tipografia (mantida)
+
+- **Display:** Inter weights 700 e 900 (Google Fonts)
+- **Body:** Inter weight 400
+- **Mono:** JetBrains Mono weight 400 (números, anos, metadados)
+
+### 2.3 Escala Tipográfica (mantida)
+
+| Token | Desktop | Mobile | Peso |
+|---|---|---|---|
+| `display-xl` | clamp(140px, 18vw, 280px) | 80px | 900 |
+| `display-lg` | clamp(48px, 7vw, 96px) | 40px | 700 |
+| `display-md` | 48px | 32px | 700 |
+| `body-lg` | 22px | 18px | 400 |
+| `body-md` | 16px | 15px | 400 |
+| `body-sm` | 14px | 13px | 400 |
+| `label` | 13px | 12px | 500 |
+| `mono-sm` | 12px | 11px | 400 |
+
+> **MUDANÇA v2:** `display-xl` agora vai de 140px a 280px (era 80–220px). Precisamos do título realmente GIGANTE na hero pra funcionar.
+
+### 2.4 NOVO: Grid Lines Editorial (inspiração James Holt)
+
+**Componente:** background com linhas verticais sutis, aplicado em `<section>` selecionadas (Hero, Sobre, Contato).
+
+**CSS:**
+```css
+.editorial-grid {
+  background-image:
+    linear-gradient(to right,
+      rgba(10, 10, 10, 0.04) 1px,
+      transparent 1px
+    );
+  background-size: calc((100% - 128px) / 12) 100%;
+  background-position: 64px 0;
+  background-repeat: repeat;
+}
+```
+
+(128px = padding lateral total; 12 colunas iguais; offset 64px do início)
+
+**Onde aplicar:**
+- Hero (background da section inteira)
+- Sobre (background da section)
+- Contato (background da section)
+- NÃO aplicar em: Marquee, Reel, Trabalhos, Processo
+
+### 2.5 Componente Botão WhatsApp (NOVO no v2)
+
+Aparece em 2 lugares:
+- **Header** (canto direito)
+- **Contato** (CTA principal)
+
+**Versão Header (compacta):**
+```
+Texto: "Conversar"
+Após o texto: ícone seta diagonal (Lucide ArrowUpRight, 16px)
+Background: #0A0A0A
+Color: #F2F2EE
+Padding: 10px 18px
+Border-radius: 0
+Font: Inter weight 500, 14px
+Letter-spacing: -0.01em
+Display: inline-flex, align-items center, gap 8px
+Hover: background #F2F2EE, color #0A0A0A, border 1px solid #0A0A0A (compensa o ganho de altura)
+Transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1)
+href: https://wa.me/5554997227310?text=Oi%20Gustavo%2C%20vim%20pelo%20site%20da%20Bona%20Films!
+target: _blank
+```
+
+**Versão Contato (grande):**
+- Mesma estética, mas padding 24px 40px
+- Font 18px
+- Texto: "Conversar no WhatsApp →" (seta inline em texto, não ícone)
+
+### 2.6 Componentes Globais (mantidos)
+
+- Botão padrão, link, card de projeto, label "(Section)", coordenada mono — todos mantidos como no v1.
+
+### 2.7 Microinterações & Animações
+
+Mantidas do v1 (Lenis, Framer Motion entry, hover de vídeos, cursor opcional).
+
+---
+
+## 3. ESTRUTURA GLOBAL
+
+### 3.1 Header (REVISADO no v2)
+
+**Layout (desktop, 3 colunas — agora com WhatsApp à direita em vez de coordenada):**
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  [BONA FILMS.]     [Trabalhos] [Sobre] [Contato]      [Conversar ↗] │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+- **Esquerda:** Logo wordmark `BONA FILMS.` — Inter weight 900, 18px, letter-spacing -0.02em, color #0A0A0A. Clique = scroll to top.
+- **Centro:** Nav (3 links) — Inter weight 500, 15px. Links: `Trabalhos`, `Sobre`, `Contato`. Click = scroll suave para a section correspondente.
+- **Direita:** Botão WhatsApp (versão compacta — ver 2.5).
+
+**Layout mobile:**
+```
+[BONA FILMS.]                                       [Conversar ↗]
+```
+
+- Mobile NÃO tem hamburger. O botão WhatsApp continua visível (CTA principal). Nav (Trabalhos / Sobre / Contato) some — o usuário simplesmente rola a página. É um one-pager curto, hamburger seria overkill.
+
+**Comportamento sticky:**
+- Antes de 80px de scroll: header sem background, integrado ao hero
+- Após 80px: background `rgba(242, 242, 238, 0.85)` + `backdrop-filter: blur(12px)` + `border-bottom: 1px solid #D4D4CE`
+- Transition: 0.3s ease
+
+**Altura:** 72px desktop / 64px mobile.
+**Padding lateral:** mesmo do container (64px desktop / 24px mobile).
+**z-index:** 50 (sempre acima de tudo).
+
+---
+
+## 4. SEÇÃO 01 — HERO (RECONSTRUÍDA — leia com atenção)
+
+### 4.1 Premissa
+
+A versão v1 falhou porque:
+1. A foto ficou maior que o título (Tukiko é o OPOSTO — título gigante, foto média)
+2. O `mix-blend-mode: difference` não foi aplicado corretamente
+3. Faltou a estética editorial de "documento" (sem grid lines, sem micro-textos)
+
+Esta v2 corrige tudo isso com especificação pixel-by-pixel.
+
+### 4.2 Layout Desktop (1440px de referência)
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│  HEADER (já posicionado acima)                                                    │
+│                                                                                   │
+│  ┌─ Linhas verticais do grid editorial (12 cols) atravessando toda a section ─┐  │
+│  │                                                                              │  │
+│  │  videomaker                                              baseado em          │  │
+│  │  & criador de reels                                      caxias do sul, rs  │  │
+│  │  ─────────────                                          ─────────────        │  │
+│  │  (Inter 13px #6B6B66)                                   (Inter 13px #6B6B66) │  │
+│  │                                                                              │  │
+│  │                                                                              │  │
+│  │       ╔══════════════════════════════════════════════════════════════╗     │  │
+│  │       ║                                                                ║     │  │
+│  │       ║   B  o  n  a    F  i  l  m  s                                  ║     │  │
+│  │       ║   ↑                                                            ║     │  │
+│  │       ║   TÍTULO GIGANTE (display-xl, ~240px)                          ║     │  │
+│  │       ║   Cor: #0A0A0A (preto)                                         ║     │  │
+│  │       ║   Position: relative; z-index: 5                               ║     │  │
+│  │       ║   mix-blend-mode: difference                                   ║     │  │
+│  │       ║                                                                ║     │  │
+│  │       ║      ┌────────────────────────────┐                            ║     │  │
+│  │       ║      │                            │                            ║     │  │
+│  │       ║      │   [FOTO P&B  ╳  TÍTULO]    │  ← FOTO ATRÁS DO TÍTULO   ║     │  │
+│  │       ║      │   Aspect 4:5 (vertical!)   │     onde sobrepõe, o      ║     │  │
+│  │       ║      │   Width: 540px max          │     mix-blend-mode inverte║     │  │
+│  │       ║      │   Position: absolute        │                            ║     │  │
+│  │       ║      │   z-index: 1 (atrás)        │                            ║     │  │
+│  │       ║      │   Margin-top: -120px        │                            ║     │  │
+│  │       ║      │   (sobe pra atravessar)     │                            ║     │  │
+│  │       ║      │                            │                            ║     │  │
+│  │       ║      │                            │                            ║     │  │
+│  │       ║      └────────────────────────────┘                            ║     │  │
+│  │       ║                                                                ║     │  │
+│  │       ╚══════════════════════════════════════════════════════════════╝     │  │
+│  │                                                                              │  │
+│  │  histórias cinematográficas                              desde 2020          │  │
+│  │  para marcas e pessoas                                   ─────────────        │  │
+│  │  ─────────────                                          (mono 12px)          │  │
+│  │  (Inter 13px #6B6B66)                                                        │  │
+│  │                                                                              │  │
+│  └──────────────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 4.3 Especificação Pixel-by-Pixel
+
+**Section container:**
+```css
+section.hero {
+  min-height: 100vh;
+  background: #F2F2EE;
+  background-image: linear-gradient(to right, rgba(10,10,10,0.04) 1px, transparent 1px);
+  background-size: calc((100% - 128px) / 12) 100%;
+  background-position: 64px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 64px 64px;
+  overflow: hidden;
+}
+```
+
+**Hero content wrapper (centraliza tudo):**
+```css
+.hero-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+```
+
+**Título "Bona Films":**
+```css
+.hero-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: clamp(140px, 18vw, 280px);
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+  color: #0A0A0A;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  mix-blend-mode: difference;
+  /* Onde o texto sobrepõe a foto preto-e-branco, ele inverte os pixels:
+     - Sobre fundo claro (#F2F2EE): aparece preto
+     - Sobre foto P&B: aparece "invertido" (claro vira escuro, escuro vira claro)
+     Esse é O EFEITO característico do Tukiko Miku. */
+  margin: 0;
+  padding: 0;
+}
+```
+
+**Importante:** O título é UMA LINHA SÓ ("Bona Films"). Não quebrar em duas linhas. Em telas muito pequenas (< 640px), reduzir font-size para 64px e SE necessário quebrar como "Bona / Films" em 2 linhas.
+
+**Foto Hero:**
+```css
+.hero-photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  /* -45% (não -50%) porque o título precisa atravessar a parte SUPERIOR da foto */
+  width: 540px;
+  max-width: 60%;
+  aspect-ratio: 4 / 5;
+  /* IMPORTANTE: aspect ratio VERTICAL (4:5), NÃO horizontal */
+  object-fit: cover;
+  object-position: center top;
+  filter: grayscale(100%) contrast(1.1);
+  z-index: 1;
+  /* z-index 1 = ATRÁS do título (que tem z-index 5) */
+}
+```
+
+**Por que aspect 4:5 (vertical) e não 16:10 (horizontal)?**
+Porque o título precisa atravessar a foto NO MEIO. Se a foto fosse horizontal, ela ficaria muito baixa/larga e o título "passaria por cima". Com a foto vertical, o título atravessa a TESTA/OLHOS do modelo, criando o efeito icônico do Tukiko.
+
+### 4.4 Micro-textos Editoriais (NOVO no v2 — inspiração James Holt)
+
+4 blocos pequenos posicionados nos 4 cantos do hero, ao redor do título:
+
+**Top-left:**
+```
+videomaker
+& criador de reels
+```
+- Font: Inter weight 400, 13px
+- Color: #6B6B66
+- Linha decorativa abaixo: 24px width, 1px height, background #6B6B66, margin-top 12px
+- Position: absolute, top: 120px (logo abaixo do header), left: 64px (padding lateral)
+
+**Top-right:**
+```
+baseado em
+caxias do sul, rs
+```
+- Mesmo estilo
+- Position: absolute, top: 120px, right: 64px
+- Text-align: right
+- Linha decorativa acima ou abaixo, mesma especificação
+
+**Bottom-left:**
+```
+histórias cinematográficas
+para marcas e pessoas
+```
+- Mesmo estilo do top-left
+- Position: absolute, bottom: 64px, left: 64px
+
+**Bottom-right:**
+```
+desde 2020
+```
+- Font: JetBrains Mono 12px, color #6B6B66
+- Linha decorativa acima: 24px width, 1px height
+- Position: absolute, bottom: 64px, right: 64px
+
+> **NOTA IMPORTANTE:** Esses micro-textos NÃO devem ficar dentro da foto. Eles ficam nos cantos do CONTAINER da hero, criando a vibe de "documento editorial" do James Holt. A foto fica no meio, com o título sobreposto.
+
+### 4.5 Foto Placeholder — Prompt para gerar com AI
+
+Mantido do v1, mas refinado:
+
+> **Prompt para AI image generator:**
+> *"Black and white cinematic portrait of a young Brazilian man in his late 20s with short dark hair, sharp jawline, neutral expression, looking slightly off-camera. Subtle motion blur on the left side of the face (ghost effect), creating a sense of movement. Dramatic side lighting, high contrast, soft film grain. Editorial photography style, shot on medium format, looks like a fashion magazine cover. Background is plain mid-gray, slightly out of focus. Vertical composition 4:5 aspect ratio. Photorealistic."*
+
+File path: `/public/images/hero-placeholder.jpg`
+Dimensões finais: 1080 x 1350px (aspect 4:5)
+Peso máximo: 300KB (otimizado WebP ou JPEG progressive)
+
+### 4.6 Hero Mobile (< 768px)
+
+Em mobile, `mix-blend-mode: difference` continua funcionando, mas o layout precisa ser ajustado:
+
+```
+[HEADER]
+
+videomaker                    baseado em
+& criador de reels            caxias do sul, rs
+
+         ╔═══════════════════════════╗
+         ║                           ║
+         ║     B o n a               ║
+         ║     F i l m s             ║
+         ║       (foto atrás)        ║
+         ║                           ║
+         ╚═══════════════════════════╝
+
+histórias                     desde 2020
+cinematográficas
+```
+
+**Ajustes mobile:**
+- Título quebra em 2 linhas: "Bona" + "Films"
+- Font-size: 64px
+- Foto: width 280px, aspect 4:5
+- Micro-textos: 2 colunas no topo (top-left + top-right) e 2 colunas embaixo
+- Padding lateral: 24px
+
+---
+
+## 5. SEÇÃO 02 — MARQUEE (mantida do v1, copy ajustada)
+
+### 5.1 Layout
+
+Faixa horizontal full-width entre Hero e Sobre.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ ─ BONA FILMS — VÍDEOS QUE FICAM NA MEMÓRIA — BONA FILMS — VÍDEO ─│
+└──────────────────────────────────────────────────────────────────┘
+```
+
+- Background: `#F2F2EE`
+- Border-top e border-bottom: 1px solid #0A0A0A
+- Padding vertical: 32px
+- Font: Inter weight 900, clamp(40px, 6vw, 72px), color #0A0A0A
+- Letter-spacing: -0.03em
+- Texto: `BONA FILMS — VÍDEOS QUE FICAM NA MEMÓRIA — ` repetido em loop
+- Animação: `translateX(-100%)` em 60s linear infinite
+- Whitespace: nowrap
+
+> **Mudança v2:** Copy em PT-BR ("VÍDEOS QUE FICAM NA MEMÓRIA" em vez de "CINEMATIC STORYTELLING").
+
+---
+
+## 6. SEÇÃO 03 — SOBRE
+
+### 6.1 Layout Desktop
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ [Background: #F2F2EE, com grid lines editoriais]                 │
+│                                                                   │
+│  (Sobre)                                                          │
+│                                                                   │
+│  ┌─────────────────────────┐    ┌──────────────────────────────┐│
+│  │                         │    │                              ││
+│  │  [FOTO P&B do Gustavo  │    │  Vídeos que ficam            ││
+│  │   com câmera/gimbal,    │    │  na memória.                 ││
+│  │   aspect 4:5]           │    │  ↑ display-md (48px)         ││
+│  │                         │    │                              ││
+│  │                         │    │  Bona Films é a produtora    ││
+│  │                         │    │  audiovisual de Gustavo      ││
+│  │                         │    │  Bonadeu. Videomaker e       ││
+│  │                         │    │  criador de reels com foco   ││
+│  │                         │    │  em narrativa visual, ritmo  ││
+│  │                         │    │  e emoção.                   ││
+│  │                         │    │                              ││
+│  │                         │    │  Realizamos comerciais,      ││
+│  │                         │    │  institucionais e conteúdo   ││
+│  │                         │    │  autoral para marcas         ││
+│  │                         │    │  e pessoas.                  ││
+│  │                         │    │                              ││
+│  │                         │    │  Baseados no Rio Grande      ││
+│  │                         │    │  do Sul. Rodando o Brasil.   ││
+│  └─────────────────────────┘    └──────────────────────────────┘│
+│                                                                   │
+│  ──────────────────────────────────────────────────────────────  │
+│  ↑ border-top de separação                                       │
+│                                                                   │
+│  ┌──────────────┬──────────────┬──────────────┐                  │
+│  │  05+         │  40+         │  2.000+      │                  │
+│  │  anos de     │  projetos    │  seguidores  │                  │
+│  │  estrada     │  entregues   │  no instagram│                  │
+│  └──────────────┴──────────────┴──────────────┘                  │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 6.2 Especificações (REVISADAS — copy PT-BR + sem "direção")
+
+**Label:** `(Sobre)` — Inter 13px weight 500, color #6B6B66, margin-bottom 48px
+
+**Foto About:**
+- Aspect ratio 4:5
+- Filter: grayscale(100%)
+- Border-radius: 0
+- Placeholder path: `/public/images/about-placeholder.jpg`
+- **Prompt AI para placeholder:**
+  > *"Black and white documentary photograph of a young man holding a professional video camera with a gimbal stabilizer. Side profile, focused expression, looking at the camera screen. Shot in a moody industrial setting. Dramatic lighting, high contrast, film grain. Editorial documentary style, vertical 4:5 composition."*
+
+**Headline (PT-BR, sem "direction"):**
+- Texto: `Vídeos que ficam na memória.`
+- Font: Inter weight 700, 48px desktop / 32px mobile
+- Letter-spacing: -0.03em
+- Line-height: 1.0
+- Color: #0A0A0A
+- Margin-bottom: 32px
+
+**Parágrafo 1:**
+> "Bona Films é a produtora audiovisual de Gustavo Bonadeu. Videomaker e criador de reels com foco em narrativa visual, ritmo e emoção."
+
+**Parágrafo 2:**
+> "Realizamos comerciais, institucionais e conteúdo autoral para marcas e pessoas."
+
+**Parágrafo 3:**
+> "Baseados no Rio Grande do Sul. Rodando o Brasil."
+
+Specs: Inter 18px weight 400, line-height 1.6, color #0A0A0A, margin entre parágrafos 16px.
+
+### 6.3 Stats (Grid 3 colunas)
+
+Layout idêntico ao v1, mas copy em PT-BR:
+
+```
+05+               40+               2.000+
+anos de           projetos          seguidores
+estrada           entregues         no instagram
+```
+
+> **NOTA:** Os números são placeholders aproximados. O Gustavo deve confirmar:
+> - "05+ anos" → quantos anos ele filma profissionalmente?
+> - "40+ projetos" → quantos projetos entregou?
+> - "2.000+ seguidores" → confirmar contagem atual do @gbonadeu_
+
+Specs visuais idênticas ao v1 (número 64px weight 900, label 14px color #6B6B66).
+
+---
+
+## 7. SEÇÃO 04 — REEL (Vídeo Destaque Principal)
+
+### 7.1 Conceito
+
+Mantida estrutura do v1, mas com correções de copy.
+
+### 7.2 Layout
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ [Background: #0A0A0A — preto]                                     │
+│                                                                   │
+│  (Reel — 2025)                                                    │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │                                                            │  │
+│  │              [PLAYER DE VÍDEO 16:9 FULL-WIDTH]             │  │
+│  │              [Poster image: still mais bonito do reel]     │  │
+│  │              [Botão play centralizado: círculo 96px        │  │
+│  │               off-white com triângulo preto]               │  │
+│  │                                                            │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│                                                                   │
+│  ┌──────────────────────────────┬──────────────────────────────┐ │
+│  │ Reel 2025                    │  Filmado e editado por       │ │
+│  │ Um ano em movimento          │  Gustavo Bonadeu             │ │
+│  └──────────────────────────────┴──────────────────────────────┘ │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 7.3 Mudanças v2
+
+- Label: `(Reel — 2025)` (era `(Showreel — 2025)`)
+- Crédito: `Filmado e editado por Gustavo Bonadeu` (era `Directed & shot by Gustavo Bonadeu`)
+- Título do vídeo: `Reel 2025 / Um ano em movimento` (era `Reel 2025 / A year in motion`)
+
+### 7.4 Especificações Técnicas (mantidas do v1)
+
+- Background: `#0A0A0A`, padding vertical 120px desktop / 80px mobile
+- Container interno: max-width 1440px, padding lateral 64px / 24px
+- Player aspect ratio: 16:9
+- Botão play: 96px diâmetro, background #F2F2EE, ícone Lucide `Play` 32px preto
+- Metadata abaixo do player: JetBrains Mono 14px, color #6B6B66
+- Componente VideoPlayer: HTML5 nativo com controles ativados após click
+
+### 7.5 Arquivos necessários
+
+- `/public/videos/reel.mp4` — H.264, 1080p, max 10MB
+- `/public/images/reel-poster.jpg` — 1920x1080, P&B, ~200KB
+
+---
+
+## 8. SEÇÃO 05 — TRABALHOS SELECIONADOS (RECONSTRUÍDA — vídeos 16:9)
+
+### 8.1 Mudança Principal v2
+
+Todos os 3 vídeos do grid agora são **16:9 horizontal** (eram 16:9 + 4:5 + 21:9 no v1).
+
+### 8.2 Layout Desktop
+
+Layout asymmetric com 3 vídeos:
+- **Linha 1:** 2 vídeos lado a lado (grid 2 cols, ambos aspect 16:9)
+- **Linha 2:** 1 vídeo full-width destaque (aspect 16:9, largura total)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ [Background: #F2F2EE]                                             │
+│                                                                   │
+│  (Trabalhos selecionados)                                         │
+│                                                                   │
+│  ┌──────────────────────────┐  ┌──────────────────────────────┐ │
+│  │                          │  │                              │ │
+│  │  [VÍDEO 1 — col 6]       │  │  [VÍDEO 2 — col 6]           │ │
+│  │  Aspect 16:9             │  │  Aspect 16:9                 │ │
+│  │  Hover: play loop muted  │  │  Hover: play loop muted      │ │
+│  │                          │  │                              │ │
+│  └──────────────────────────┘  └──────────────────────────────┘ │
+│  Cliente A          2025        Olivas de Gramado    2024        │
+│  Comercial                      Cobertura de Evento              │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │                                                            │  │
+│  │  [VÍDEO 3 — col 12, full-width destaque]                   │  │
+│  │  Aspect 16:9                                               │  │
+│  │  Hover: play loop muted                                    │  │
+│  │                                                            │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│  Nordweg                                              2024       │
+│  Filme Institucional                                              │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 8.3 Especificações
+
+**Section:**
+- Background: `#F2F2EE`
+- Padding vertical: 160px desktop / 100px mobile
+- Container: max-width 1440px
+
+**Label:** `(Trabalhos selecionados)` — Inter 13px weight 500, color #6B6B66, margin-bottom 64px
+
+**Grid:**
+- Display: grid, grid-template-columns: repeat(12, 1fr), gap 24px
+- Vídeo 1: grid-column: span 6
+- Vídeo 2: grid-column: span 6
+- Vídeo 3: grid-column: span 12 (full-width)
+- Gap vertical entre linhas: 80px
+
+**Cada card de vídeo (estrutura unificada):**
+```jsx
+<div className="work-card group cursor-pointer">
+  <div className="aspect-video overflow-hidden bg-black">
+    {/* aspect-video = 16:9 do Tailwind */}
+    <video
+      poster={posterPath}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onMouseEnter={(e) => e.target.play()}
+      onMouseLeave={(e) => { e.target.pause(); e.target.currentTime = 0; }}
+      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+    >
+      <source src={videoPath} type="video/mp4" />
+    </video>
+  </div>
+  <div className="flex justify-between items-start mt-6">
+    <div>
+      <p className="font-medium text-base">{clientName}</p>
+      <p className="text-sm text-muted mt-1">{projectType}</p>
+    </div>
+    <p className="font-mono text-xs text-muted">{year}</p>
+  </div>
+</div>
+```
+
+**Modal/Lightbox ao clicar:**
+- Idêntico ao v1: overlay fullscreen escuro, vídeo centralizado, controls nativos, ESC fecha
+- Aspect ratio do modal: 16:9 (todos os vídeos)
+- max-width: 90vw, max-height: 85vh
+
+### 8.4 Conteúdo dos 3 Cards (PT-BR)
+
+> **PLACEHOLDER — substituir pelos vídeos reais do Gustavo.**
+
+| # | Layout | Cliente | Tipo | Ano | Arquivo |
+|---|--------|---------|------|-----|---------|
+| 1 | col-6, 16:9 | [Cliente 1] | Comercial | 2025 | `/videos/work-01.mp4` |
+| 2 | col-6, 16:9 | Olivas de Gramado | Cobertura de Evento | 2024 | `/videos/work-02.mp4` |
+| 3 | col-12, 16:9 | Nordweg | Filme Institucional | 2024 | `/videos/work-03.mp4` |
+
+> **Categorias sugeridas (PT-BR, sem "direção"):**
+> - Comercial
+> - Filme Institucional
+> - Cobertura de Evento
+> - Conteúdo Autoral
+> - Vídeo de Marca
+> - Reels & Conteúdo Social
+
+### 8.5 Arquivos necessários
+
+- `/public/videos/work-01.mp4` (16:9, max 10MB)
+- `/public/videos/work-02.mp4` (16:9, max 10MB)
+- `/public/videos/work-03.mp4` (16:9, max 10MB)
+- `/public/images/work-01-poster.jpg` (1920x1080)
+- `/public/images/work-02-poster.jpg` (1920x1080)
+- `/public/images/work-03-poster.jpg` (1920x1080)
+
+### 8.6 Mobile (< 768px)
+
+Todos os 3 vídeos em 1 coluna (stacked), aspect 16:9 mantido, gap vertical 48px.
+
+---
+
+## 9. SEÇÃO 06 — PROCESSO (3 Pilares — em PT-BR)
+
+### 9.1 Mudanças v2
+
+- Nome da seção: `Processo` (era `Approach`)
+- Headline em PT-BR
+- Pilares em PT-BR
+- SEM uso de "direção", "diretor", "creative direction"
+
+### 9.2 Layout (mantido do v1, copy nova)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  [Background: #0A0A0A — preto]                                    │
+│                                                                   │
+│  (Processo)                                                       │
+│                                                                   │
+│  Três princípios                                                  │
+│  em cada vídeo                                                    │
+│  que entrego.                                                     │
+│  ↑ display-lg, color #F2F2EE                                      │
+│                                                                   │
+│  ┌─────────────────┬─────────────────┬─────────────────────────┐ │
+│  │                 │                 │                         │ │
+│  │  01             │  02             │  03                     │ │
+│  │  ──             │  ──             │  ──                     │ │
+│  │                 │                 │                         │ │
+│  │  História       │  Luz &          │  Conexão                │ │
+│  │  primeiro       │  movimento      │  real                   │ │
+│  │                 │                 │                         │ │
+│  │  Todo vídeo     │  Frames         │  Briefing é só          │ │
+│  │  começa numa    │  pensados pra   │  o começo. A            │ │
+│  │  pergunta:      │  durar.         │  história precisa       │ │
+│  │  o que essa     │  Câmera com     │  ser real pra           │ │
+│  │  história quer  │  intenção,      │  emocionar quem         │ │
+│  │  dizer?         │  luz como       │  assiste.               │ │
+│  │                 │  linguagem.     │                         │ │
+│  └─────────────────┴─────────────────┴─────────────────────────┘ │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 9.3 Especificações (mantidas, copy nova)
+
+**Background:** `#0A0A0A`, padding vertical 120px desktop / 80px mobile.
+
+**Label:** `(Processo)` — Inter 13px weight 500, color #6B6B66, margin-bottom 48px
+
+**Headline:**
+- Texto: `Três princípios em cada vídeo que entrego.`
+- Font: Inter weight 700, clamp(48px, 7vw, 96px)
+- Letter-spacing: -0.03em
+- Line-height: 1.0
+- Color: #F2F2EE
+- Max-width: 720px
+- Margin-bottom: 96px
+
+**Grid de 3 pilares (3 cols desktop, 1 col mobile):**
+
+Para cada pilar:
+- Número: JetBrains Mono 14px weight 400, color #6B6B66
+- Linha separadora: 32px width × 1px height, background #6B6B66, margin 16px 0
+- Título: Inter weight 700, 28px, color #F2F2EE, margin-bottom 16px
+- Descrição: Inter weight 400, 16px, line-height 1.6, color rgba(242,242,238, 0.7)
+
+**Conteúdo dos 3 pilares (PT-BR):**
+
+**01 — História primeiro**
+> "Todo vídeo começa numa pergunta: o que essa história quer dizer? Antes da câmera, vem a narrativa."
+
+**02 — Luz & movimento**
+> "Frames pensados pra durar. Câmera com intenção, luz como linguagem — não como acessório."
+
+**03 — Conexão real**
+> "Briefing é só o começo. A história precisa ser real pra emocionar quem assiste."
+
+---
+
+## 10. SEÇÃO 07 — CONTATO
+
+### 10.1 Layout (REVISADO com botão WhatsApp grande)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  [Background: #F2F2EE, com grid lines editoriais]                │
+│                                                                   │
+│  (Contato)                                                        │
+│                                                                   │
+│  Vamos fazer                                                      │
+│  algo memorável.                                                  │
+│  ↑ display-xl, color #0A0A0A                                      │
+│                                                                   │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │                                                            │  │
+│  │       [ Conversar no WhatsApp → ]   ← Botão grande         │  │
+│  │                                                            │  │
+│  │                                                            │  │
+│  │       Ou me chama no Instagram:                            │  │
+│  │       @gbonadeu_  ↗                                        │  │
+│  │                                                            │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 10.2 Especificações
+
+**Background:** `#F2F2EE` com grid editorial, padding vertical 160px desktop / 100px mobile.
+
+**Label:** `(Contato)` — Inter 13px weight 500, color #6B6B66, margin-bottom 48px
+
+**Headline:**
+- Texto: `Vamos fazer algo memorável.`
+- Font: Inter weight 900, clamp(72px, 11vw, 160px)
+- Letter-spacing: -0.05em
+- Line-height: 0.9
+- Color: #0A0A0A
+- Margin-bottom: 96px
+
+**Botão WhatsApp (versão grande):**
+- Texto: `Conversar no WhatsApp →`
+- Background: `#0A0A0A`
+- Color: `#F2F2EE`
+- Padding: `24px 40px`
+- Border-radius: 0
+- Font: Inter weight 500, 18px
+- Letter-spacing: -0.01em
+- Display: inline-block
+- Hover: background `#F2F2EE`, color `#0A0A0A`, border `2px solid #0A0A0A` (padding ajustado para 22px 38px pra compensar)
+- Transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+- href: `https://wa.me/5554997227310?text=Oi%20Gustavo%2C%20vim%20pelo%20site%20da%20Bona%20Films!`
+- target: `_blank`
+
+**Link Instagram (abaixo do botão, mais discreto):**
+- Texto label: `Ou me chama no Instagram:` (Inter 14px, color #6B6B66, margin-top 48px)
+- Texto link: `@gbonadeu_ ↗`
+- Font: Inter weight 500, 32px
+- Color: #0A0A0A
+- Hover: text-decoration underline, offset 6px
+- href: `https://instagram.com/gbonadeu_`
+- target: `_blank`
+
+### 10.3 Nota Técnica sobre o WhatsApp
+
+Verificar o formato do número:
+- Número informado: `+55 54 9972-2731`
+- Formato wa.me (sem espaços/traços, com código do país e DDD): `5554997227310`
+
+> **CONFIRMAR com o Gustavo:** o número tem o "9" inicial (mobile)? Se for `+55 54 99972-2731` (5 dígitos após o DDD), o link wa.me correto seria `5554999722731`. Se for `+55 54 9972-2731` (4 dígitos), seria `5554997227310`. Ajustar conforme confirmação.
+
+---
+
+## 11. FOOTER (REVISADO no v2)
+
+### 11.1 Layout
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ [Background: #0A0A0A]                                             │
+│                                                                   │
+│  ┌───────────────────┬───────────────────┬───────────────────┐   │
+│  │                   │                   │                   │   │
+│  │  BONA FILMS.      │  © 2026           │  29.3782° S       │   │
+│  │  Inter 900 16px   │  Todos os         │  −51.1794° W      │   │
+│  │  #F2F2EE          │  direitos         │  caxias do sul    │   │
+│  │                   │  reservados.      │                   │   │
+│  │                   │                   │  ↑ JetBrains Mono │   │
+│  │                   │                   │     12px #6B6B66  │   │
+│  │                   │                   │                   │   │
+│  └───────────────────┴───────────────────┴───────────────────┘   │
+│                                                                   │
+│  ┌───────────────────────────────────────────────────────────┐   │
+│  │  (Instagram)  ↗ @gbonadeu_     (WhatsApp)  ↗ +55 54 ...   │   │
+│  └───────────────────────────────────────────────────────────┘   │
+│                                                                   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Mudanças v2:**
+- Coordenada agora aparece no footer (era no header)
+- Adicionada a longitude e o nome da cidade (vibe James Holt — info editorial discreta)
+- Linha extra com links sociais em formato `(Label) ↗ valor` (inspiração James Holt)
+
+**Specs:**
+- Background: `#0A0A0A`
+- Padding vertical: 64px
+- Border-top: 1px solid #1F1F1F
+- Grid 3 colunas + linha de links abaixo
+
+**Conteúdo coluna direita (coordenadas):**
+```
+29.3782° S
+−51.1794° W
+caxias do sul
+```
+Font: JetBrains Mono 12px, color #6B6B66, text-align right.
+
+**Links sociais (linha inferior do footer):**
+- Format: `(Instagram) ↗ @gbonadeu_`
+- Font: Inter 14px weight 400
+- Color: #F2F2EE para "(Instagram)" e "@gbonadeu_"
+- Color: #6B6B66 para "↗"
+- Display: inline-flex, gap 32px entre os 2 links
+- Margin-top: 48px do bloco superior
+
+---
+
+## 12. RESPONSIVIDADE — BREAKPOINTS
+
+Mantidos do v1.
+
+| Breakpoint | Largura | Mudanças principais |
+|---|---|---|
+| Mobile | < 768px | Stack vertical, hero com título quebrado em 2 linhas |
+| Tablet | 768px–1024px | Grid 2 cols onde tinha 3 |
+| Desktop | > 1024px | Layout completo conforme spec |
+| Wide | > 1440px | Container fixo em 1440px |
+
+---
+
+## 13. ASSETS NECESSÁRIOS — CHECKLIST v2
+
+### Imagens (`/public/images/`)
+- [ ] `hero-placeholder.jpg` — 1080x1350 (aspect 4:5 vertical!), P&B
+- [ ] `about-placeholder.jpg` — 1080x1350 (aspect 4:5), P&B
+- [ ] `reel-poster.jpg` — 1920x1080 (16:9)
+- [ ] `work-01-poster.jpg` — 1920x1080 (16:9)
+- [ ] `work-02-poster.jpg` — 1920x1080 (16:9)
+- [ ] `work-03-poster.jpg` — 1920x1080 (16:9)
+- [ ] `favicon.ico` + `apple-touch-icon.png`
+- [ ] `og-image.jpg` — 1200x630
+
+### Vídeos (`/public/videos/`)
+- [ ] `reel.mp4` — 16:9, H.264, max 10MB
+- [ ] `work-01.mp4` — 16:9, H.264, max 10MB
+- [ ] `work-02.mp4` — 16:9, H.264, max 10MB
+- [ ] `work-03.mp4` — 16:9, H.264, max 10MB
+
+---
+
+## 14. SEO & METATAGS (PT-BR)
+
+```html
+<title>Bona Films — Videomaker | Gustavo Bonadeu</title>
+<meta name="description" content="Produtora audiovisual de Gustavo Bonadeu. Vídeos comerciais, institucionais e autorais com foco em narrativa, ritmo e emoção. Baseados em Caxias do Sul, RS." />
+<meta property="og:title" content="Bona Films" />
+<meta property="og:description" content="Vídeos que ficam na memória. Comerciais, institucionais e conteúdo autoral por Gustavo Bonadeu." />
+<meta property="og:image" content="/og-image.jpg" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
+<html lang="pt-BR">
+<link rel="canonical" href="https://bonafilms.com.br" />
+```
+
+---
+
+## 15. CHECKLIST DE GLOSSÁRIO PT-BR (não usar inglês)
+
+| ❌ Não usar | ✅ Usar |
+|---|---|
+| Selected Work | Trabalhos selecionados |
+| Showreel | Reel |
+| About | Sobre |
+| Contact | Contato |
+| Approach | Processo |
+| Work | Trabalhos |
+| Directed by | Filmado por / Criado por |
+| Director | Videomaker |
+| Creative direction | (não usar — substituir por "criação" ou tirar) |
+| Cinematic storytelling | Vídeos que ficam na memória / Histórias cinematográficas |
+| Brand Film | Filme Institucional |
+| Commercial | Comercial |
+| Event Coverage | Cobertura de Evento |
+| Documentary Short | Documentário |
+| Years of craft | Anos de estrada |
+| Projects delivered | Projetos entregues |
+| Followers on IG | Seguidores no Instagram |
+| Let's make something that matters | Vamos fazer algo memorável |
+| Let's talk | Conversar |
+| Ready to start? | Bora começar? |
+
+---
+
+## 16. NOTAS CRÍTICAS PRO REPLIT/AURABUILD (v2)
+
+### Itens não-negociáveis (NÃO improvisar):
+
+1. **Hero com `mix-blend-mode: difference` E foto VERTICAL (4:5).** Se o build anterior usou foto horizontal, ESSE é o motivo do hero ter quebrado visualmente. A foto precisa ser 4:5 (vertical) com width máximo de 540px, e o título precisa atravessar essa foto.
+
+2. **Título "Bona Films" GIGANTE.** No v1 ficou muito pequeno em relação à foto. Tamanho mínimo desktop: 200px. Ideal: 240px. O título DOMINA a tela.
+
+3. **Todos os vídeos 16:9.** Não usar aspect ratios diferentes. Uniformizar o grid.
+
+4. **Tudo em PT-BR.** Conferir cada string contra a tabela do item 15.
+
+5. **NUNCA usar "diretor" ou "direção".** Conferir cada texto.
+
+6. **Grid lines editoriais visíveis em Hero, Sobre e Contato.** Background SVG ou CSS conforme spec 2.4.
+
+7. **Micro-textos editoriais no hero** (4 blocos nos cantos). Não esquecer.
+
+8. **Botão WhatsApp no header.** Não coordenada.
+
+### Itens opcionais (Replit pode decidir):
+
+- Microanimações no scroll (parallax sutil no hero)
+- Timing exato das transitions
+- Cursor customizado
+- Implementação do modal/lightbox
+
+### Itens proibidos (não adicionar mesmo se achar que melhora):
+
+- ❌ Seção de pacotes / preços / valores
+- ❌ Formulário de contato
+- ❌ Depoimentos / testemunhos
+- ❌ FAQ
+- ❌ Cores além de P&B
+- ❌ Frases em inglês (a página é PT-BR)
+- ❌ Termo "diretor" ou variações
+- ❌ CTAs de venda agressivos
+
+---
+
+## 17. FLUXO PÓS-REPLIT (mantido)
+
+1. **Export** do Replit/Aurabuild → projeto Next.js
+2. **Antigravity:** ajustes finos, fine-tune do mix-blend-mode em diferentes browsers
+3. **Substituir assets placeholder pelos reais:**
+   - Foto hero real do Gustavo (P&B, 4:5)
+   - Foto about real do Gustavo com câmera
+   - 4 vídeos MP4 comprimidos (H.264, CRF 23)
+   - 4 poster images correspondentes
+4. **Deploy Vercel:**
+   - Conectar repo GitHub
+   - Configurar domínio bonafilms.com.br
+5. **QA:**
+   - Testar `mix-blend-mode` em Safari, Chrome, Firefox
+   - Testar hover de vídeo em desktop
+   - Confirmar links WhatsApp abrem o app
+   - Lighthouse audit > 90 performance
+
+---
+
+**Fim do PRD v2.0 — pronto para Replit/Aurabuild.**
+
+**Diferença essencial vs v1:** este documento corrige a hero (causa principal da falha visual), traduz tudo pra PT-BR, remove a linguagem de "direção", uniformiza vídeos em 16:9, e troca a coordenada do header por um CTA WhatsApp visível. As referências visuais agora são Tukiko Miku (hero) + James Holt (grid editorial + micro-textos).
