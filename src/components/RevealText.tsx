@@ -32,21 +32,26 @@ export default function RevealText({
       whileInView="visible"
       viewport={{ once, amount: 0.2 }}
     >
-      {words.map((word, i) => (
-        <span key={i} className="reveal-mask">
-          <motion.span
-            style={{ display: "inline-block" }}
-            variants={{
-              hidden: { y: "110%" },
-              visible: { y: 0 },
-            }}
-            transition={{ duration: 0.85, ease: EASE, delay: delay + i * 0.06 }}
-          >
-            {word}
-          </motion.span>
-          {i < words.length - 1 ? " " : ""}
-        </span>
-      ))}
+      {words.map((word, i) => {
+        if (word === "[br]") return <br key={i} />;
+        if (word === "[br-md]") return <br key={i} className="hidden md:block" />;
+
+        return (
+          <span key={i} className="reveal-mask">
+            <motion.span
+              style={{ display: "inline-block" }}
+              variants={{
+                hidden: { y: "110%" },
+                visible: { y: 0 },
+              }}
+              transition={{ duration: 0.85, ease: EASE, delay: delay + i * 0.06 }}
+            >
+              {word}
+            </motion.span>
+            {i < words.length - 1 && words[i + 1] !== "[br]" && words[i + 1] !== "[br-md]" ? "\u00A0" : ""}
+          </span>
+        );
+      })}
     </Tag>
   );
 }

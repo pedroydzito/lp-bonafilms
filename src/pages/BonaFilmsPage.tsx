@@ -33,13 +33,6 @@ const fadeUp = {
   viewport: { once: true, amount: 0.2 as const },
 };
 
-const editorialGridStyle: React.CSSProperties = {
-  backgroundImage:
-    "linear-gradient(to right, rgba(10,10,10,0.04) 1px, transparent 1px)",
-  backgroundSize: "calc((100% - 128px) / 12) 100%",
-  backgroundPosition: "64px 0",
-  backgroundRepeat: "repeat",
-};
 
 const STATS = [
   { value: 5, suffix: "+", label: "anos de\nestrada" },
@@ -88,10 +81,10 @@ export default function BonaFilmsPage() {
       {/* ─── SOBRE ─── */}
       <section
         id="sobre"
-        className="w-full bg-[#F2F2EE] py-[80px] md:py-[140px]"
-        style={editorialGridStyle}
+        className="relative w-full bg-[#F2F2EE] py-[80px] md:py-[140px]"
       >
-        <div className="mx-auto max-w-[1440px] px-6 md:px-16">
+        <div className="editorial-grid absolute inset-0 pointer-events-none" />
+        <div className="relative mx-auto max-w-[1440px] px-6 md:px-16 z-10">
           <motion.p
             className="font-mono text-[12px] uppercase tracking-[0.18em] text-[#6B6B66] mb-10 md:mb-16"
             {...fadeUp}
@@ -102,8 +95,7 @@ export default function BonaFilmsPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
             {/* Foto com zoom no hover */}
             <motion.div
-              className="md:col-span-5 overflow-hidden bg-[#0A0A0A] group"
-              style={{ aspectRatio: "4/5" }}
+              className="md:col-span-5 overflow-hidden bg-[#0A0A0A] group aspect-square"
               variants={{ hidden: { opacity: 0, scale: 0.96 }, visible: { opacity: 1, scale: 1 } }}
               initial="hidden"
               whileInView="visible"
@@ -114,7 +106,7 @@ export default function BonaFilmsPage() {
                 src="/images/about-placeholder.png"
                 alt="Gustavo Bonadeu com câmera"
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+                className="w-full h-full object-cover object-bottom transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
                 style={{ filter: "grayscale(100%)" }}
               />
             </motion.div>
@@ -123,7 +115,7 @@ export default function BonaFilmsPage() {
             <div className="md:col-span-6 md:col-start-7 flex flex-col justify-center">
               <RevealText
                 as="h2"
-                text="O simples também é história."
+                text="O simples também é história, quando existe olhar."
                 className="font-sans font-bold text-[#0A0A0A] mb-8"
                 style={{
                   fontSize: "clamp(30px,4vw,52px)",
@@ -153,13 +145,13 @@ export default function BonaFilmsPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 mt-16 md:mt-24 border-t border-[#D4D4CE]">
+          <div className="flex justify-between md:grid md:grid-cols-3 mt-16 md:mt-24 border-t border-[#D4D4CE]">
             {STATS.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 className={`pt-7 md:pt-9 ${
-                  i < 2 ? "pr-3 md:pr-8 border-r border-[#D4D4CE]" : ""
-                } ${i > 0 ? "pl-3 md:pl-8" : ""}`}
+                  i < 2 ? "md:pr-8 md:border-r md:border-[#D4D4CE]" : ""
+                } ${i > 0 ? "md:pl-8" : ""}`}
                 variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
                 initial="hidden"
                 whileInView="visible"
@@ -233,8 +225,9 @@ export default function BonaFilmsPage() {
       </section>
 
       {/* ─── PROCESSO ─── */}
-      <section className="w-full bg-[#F2F2EE] py-[80px] md:py-[150px]" style={editorialGridStyle}>
-        <div className="mx-auto max-w-[1440px] px-6 md:px-16">
+      <section className="relative w-full bg-[#F2F2EE] py-[80px] md:py-[150px]">
+        <div className="editorial-grid absolute inset-0 pointer-events-none" />
+        <div className="relative mx-auto max-w-[1440px] px-6 md:px-16 z-10">
           <motion.p
             className="font-mono text-[12px] uppercase tracking-[0.18em] text-[#6B6B66] mb-10 md:mb-14"
             {...fadeUp}
@@ -244,7 +237,7 @@ export default function BonaFilmsPage() {
 
           <RevealText
             as="h2"
-            text="Como eu penso cada vídeo."
+            text="Como eu penso [br-md] cada vídeo."
             className="font-sans font-bold text-[#0A0A0A] max-w-[860px] mb-16 md:mb-28"
             style={{
               fontSize: "clamp(34px,6vw,84px)",
@@ -358,30 +351,11 @@ export default function BonaFilmsPage() {
               © 2026 Bona Films.<br />Todos os direitos reservados.
             </div>
             <div className="font-serif italic text-[15px] text-[#6B6B66] md:text-right leading-relaxed">
-              O simples também<br />é história.
+              A experiência<br />começa no olhar.
             </div>
           </div>
 
-          <div className="mt-12 pt-8 border-t border-[#1F1F1F] flex flex-col sm:flex-row gap-6 sm:gap-10">
-            <a
-              href={INSTAGRAM_HREF}
-              target="_blank"
-              rel="noreferrer"
-              className="link-underline inline-flex items-center gap-2 font-sans text-[14px] text-[#F2F2EE]"
-              data-testid="footer-link-instagram"
-            >
-              <span className="text-[#6B6B66]">(Instagram)</span> {INSTAGRAM_HANDLE}
-            </a>
-            <a
-              href={WA_HREF}
-              target="_blank"
-              rel="noreferrer"
-              className="link-underline inline-flex items-center gap-2 font-sans text-[14px] text-[#F2F2EE]"
-              data-testid="footer-link-whatsapp"
-            >
-              <span className="text-[#6B6B66]">(WhatsApp)</span> +55 54 99722-7310
-            </a>
-          </div>
+
         </div>
       </footer>
 

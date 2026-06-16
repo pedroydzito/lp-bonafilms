@@ -254,6 +254,23 @@
   animation-play-state: paused;
 }
 
+/* ───────────────────────── EDITORIAL GRID ───────────────────────── */
+.editorial-grid {
+  background-image: linear-gradient(to right, rgba(10,10,10,0.04) 1px, transparent 1px);
+  background-size: calc((100% - 48px) / 4) 100%;
+  background-position: 24px 0;
+  background-repeat: repeat;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 65%, transparent 95%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 65%, transparent 95%);
+}
+
+@media (min-width: 768px) {
+  .editorial-grid {
+    background-size: calc((100% - 128px) / 12) 100%;
+    background-position: 64px 0;
+  }
+}
+
 /* ───────────────────────── CUSTOM CURSOR ───────────────────────── */
 @media (hover: hover) and (pointer: fine) {
   html.has-custom-cursor,

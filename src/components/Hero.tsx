@@ -6,7 +6,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 function Line({ children, delay }: { children: string; delay: number }) {
   return (
-    <span className="block overflow-hidden">
+    <span className="block overflow-hidden pr-[0.15em] -mr-[0.15em] pb-[0.05em] -mb-[0.05em]">
       <motion.span
         className="block"
         initial={{ y: "115%" }}
@@ -71,73 +71,59 @@ export default function Hero() {
         style={{ boxShadow: "inset 0 0 200px 60px rgba(10,10,10,0.7)" }}
       />
 
-      {/* Corner micro-texts */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <motion.div
-          className="absolute top-[88px] md:top-[110px] left-6 md:left-16"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2, ease: EASE }}
-        >
-          <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.12em] text-[#F2F2EE]/70 leading-relaxed">
-            filmmaker<br />& produtora
-          </p>
-        </motion.div>
 
-        <motion.div
-          className="absolute top-[88px] md:top-[110px] right-6 md:right-16 text-right"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.3, ease: EASE }}
-        >
-          <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.12em] text-[#F2F2EE]/70 leading-relaxed">
-            imagem<br />& narrativa
-          </p>
-        </motion.div>
-      </div>
 
-      {/* Center headline */}
+      {/* Center headline — horizontally centered */}
       <motion.div
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4"
         style={{ y: titleY, opacity: titleOpacity }}
       >
-        <motion.p
-          className="font-mono text-[11px] md:text-[13px] uppercase tracking-[0.3em] text-[#F2F2EE]/60 mb-5 md:mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-        >
-          Produtora Audiovisual
-        </motion.p>
+        <div className="flex flex-col items-center text-center">
+          <motion.p
+            className="font-mono text-[11px] md:text-[13px] uppercase tracking-[0.3em] text-[#F2F2EE]/60 mb-5 md:mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+          >
+            Produtora Audiovisual
+          </motion.p>
 
-        <h1
-          className="font-sans font-black leading-[0.82]"
-          style={{
-            fontSize: "clamp(68px, 17vw, 280px)",
-            letterSpacing: "-0.05em",
-          }}
-        >
-          <Line delay={0.25}>BONA</Line>
-          <span className="block overflow-hidden">
-            <motion.span
-              className="block"
-              initial={{ y: "115%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.1, ease: EASE, delay: 0.4 }}
-            >
-              FILMS<span style={{ color: "var(--bona-red)" }}>.</span>
-            </motion.span>
-          </span>
-        </h1>
+          {/*
+            A largura do h1 é ditada apenas por "BONA".
+            Isso garante que "BONA" fique perfeitamente centralizado na tela,
+            enquanto "FILMS." se alinha à esquerda dele e "sangra" livremente para a direita.
+          */}
+          <h1
+            className="font-sans font-black leading-[0.82] text-left"
+            style={{
+              fontSize: "clamp(68px, 17vw, 280px)",
+              letterSpacing: "-0.05em",
+            }}
+          >
+            <Line delay={0.25}>BONA</Line>
+            <div className="w-0">
+              <span className="block overflow-hidden w-max pr-[0.2em] pb-[0.05em] -mb-[0.05em]">
+                <motion.span
+                  className="block pr-[0.1em]"
+                  initial={{ y: "115%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 1.1, ease: EASE, delay: 0.4 }}
+                >
+                  FILMS<span style={{ color: "var(--bona-red)" }}>.</span>
+                </motion.span>
+              </span>
+            </div>
+          </h1>
 
-        <motion.p
-          className="font-sans text-[15px] md:text-[19px] text-[#F2F2EE]/75 mt-6 md:mt-10 max-w-[460px]"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.1, ease: EASE }}
-        >
-          O simples também é história. Quando existe olhar.
-        </motion.p>
+          <motion.p
+            className="font-sans text-[15px] md:text-[19px] text-[#F2F2EE]/75 mt-6 md:mt-10 max-w-[520px]"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 1.1, ease: EASE }}
+          >
+            Histórias cinematográficas<br className="md:hidden" /> que ficam na memória.
+          </motion.p>
+        </div>
       </motion.div>
 
       {/* Scroll cue */}
@@ -155,17 +141,7 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* Bottom-right year */}
-      <motion.div
-        className="absolute bottom-7 md:bottom-9 right-6 md:right-16 z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.4 }}
-      >
-        <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.12em] text-[#F2F2EE]/60">
-          desde 2020
-        </p>
-      </motion.div>
+
     </section>
   );
 }
