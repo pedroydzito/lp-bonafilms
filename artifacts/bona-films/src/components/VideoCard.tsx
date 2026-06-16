@@ -1,76 +1,102 @@
 import { useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import type { WorkVideo } from "@/lib/videos";
 
 interface VideoCardProps {
-  poster: string;
-  videoSrc: string;
-  client: string;
-  type: string;
-  year: string;
-  aspectClass?: string;
+  work: WorkVideo;
+  index: string;
   onClick: (src: string) => void;
 }
 
-export default function VideoCard({ 
-  poster, 
-  videoSrc, 
-  client, 
-  type, 
-  year, 
-  aspectClass = "aspect-video",
-  onClick 
-}: VideoCardProps) {
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+export default function VideoCard({ work, index, onClick }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handleMouseEnter = () => {
-    if (videoRef.current) {
-      setIsPlaying(true);
-      videoRef.current.play().catch(err => {
-        // Silently handle if video cannot play (e.g. missing file)
-        console.warn("Could not play video on hover:", err);
-      });
-    }
+    const v = videoRef.current;
+    if (!v) return;
+    setIsPlaying(true);
+    v.play().catch(() => {});
   };
 
   const handleMouseLeave = () => {
-    if (videoRef.current) {
-      setIsPlaying(false);
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
+    const v = videoRef.current;
+    if (!v) return;
+    setIsPlaying(false);
+    v.pause();
+    v.currentTime = 0;
   };
 
   return (
-    <div className="group cursor-pointer" onClick={() => onClick(videoSrc)} data-testid={`video-card-${client}`}>
-      <div 
-        className={`relative w-full overflow-hidden bg-[#0A0A0A] ${aspectClass}`}
+    <motion.div
+      className="group cursor-pointer"
+      onClick={() => onClick(work.src)}
+      data-cursor-label="Assistir"
+      data-testid={`video-card-${work.client}`}
+      variants={{ hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0 } }}
+      initial="hidden"
+      whileInView="visible"
+      transition={{ duration: 0.9, ease: EASE }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
+      <div
+        className="relative w-full overflow-hidden bg-[#0A0A0A] aspect-video"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <img 
-          src={poster} 
-          alt={`${client} - ${type}`}
-          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isPlaying ? 'opacity-0 scale-105' : 'opacity-100 scale-100 group-hover:scale-[1.02]'}`}
+        <img
+          src={work.poster}
+          alt={`${work.client} — ${work.type}`}
+          loading="lazy"
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isPlaying ? "opacity-0 scale-110" : "opacity-100 scale-100 group-hover:scale-[1.04]"
+          }`}
+          style={{ filter: "grayscale(100%)" }}
         />
-        
+
         <video
           ref={videoRef}
-          src={videoSrc}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isPlaying ? 'opacity-100 scale-[1.02]' : 'opacity-0 scale-100'}`}
+          src={encodeURI(work.src)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[700ms] ${
+            isPlaying ? "opacity-100" : "opacity-0"
+          }`}
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
         />
-      </div>
-      
-      <div className="flex justify-between items-start mt-4">
-        <div>
-          <h3 className="font-sans font-medium text-[16px] text-[#0A0A0A]">{client}</h3>
-          <p className="font-sans font-normal text-[14px] text-[#6B6B66]">{type}</p>
+
+        {/* hover dark wash */}
+        <div className="absolute inset-0 bg-[#0A0A0A]/0 group-hover:bg-[#0A0A0A]/15 transition-colors duration-500 pointer-events-none" />
+
+        {/* index badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="font-mono text-[12px] text-[#F2F2EE] mix-blend-difference">
+            ({index})
+          </span>
         </div>
-        <span className="font-mono text-[12px] text-[#6B6B66]">{year}</span>
+
+        {/* corner arrow */}
+        <div className="absolute top-4 right-4 z-10 overflow-hidden">
+          <ArrowUpRight
+            size={24}
+            className="text-[#F2F2EE] mix-blend-difference transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] translate-x-3 -translate-y-3 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+          />
+        </div>
       </div>
-    </div>
+
+      <div className="flex justify-between items-start mt-4 md:mt-5">
+        <div>
+          <h3 className="font-sans font-semibold text-[17px] md:text-[19px] text-[#F2F2EE] tracking-[-0.01em]">
+            {work.title}
+          </h3>
+          <p className="font-sans text-[14px] text-[#F2F2EE]/55 mt-0.5">{work.type}</p>
+        </div>
+        <span className="font-mono text-[12px] text-[#F2F2EE]/55 pt-1">{work.year}</span>
+      </div>
+    </motion.div>
   );
 }

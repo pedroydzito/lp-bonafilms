@@ -47,3 +47,9 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Claude Code tooling
+.claude/
+
+# pnpm backups
+*.bak

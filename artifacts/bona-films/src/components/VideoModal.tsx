@@ -49,9 +49,10 @@ export default function VideoModal({ src, isOpen, onClose }: VideoModalProps) {
           onClick={onClose}
           data-testid="video-modal-overlay"
         >
-          <button 
-            className="absolute top-6 right-6 text-white hover:text-gray-300 z-50"
+          <button
+            className="absolute top-6 right-6 text-white hover:rotate-90 transition-transform duration-300 z-50"
             onClick={onClose}
+            data-cursor-label="Fechar"
             data-testid="button-close-modal"
           >
             <X size={32} />
