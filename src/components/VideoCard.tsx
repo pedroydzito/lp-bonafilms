@@ -95,7 +95,6 @@ export default function VideoCard({ work, index, onClick }: VideoCardProps) {
           </h3>
           <p className="font-sans text-[14px] text-[#F2F2EE]/55 mt-0.5">{work.type}</p>
         </div>
-        <span className="font-mono text-[12px] text-[#F2F2EE]/55 pt-1">{work.year}</span>
       </div>
     </motion.div>
   );

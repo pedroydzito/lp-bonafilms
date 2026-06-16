@@ -3,7 +3,6 @@ export interface WorkVideo {
   title: string;
   client: string;
   type: string;
-  year: string;
   src: string;
   poster: string;
 }
@@ -15,37 +14,33 @@ export const HERO_VIDEO = "/videos/Mkof Konstanz Winter.mp4";
 export const WORKS: WorkVideo[] = [
   {
     id: "v1",
-    title: "Vídeo 1",
+    title: "Olivas Shortcut",
     client: "Olivas de Gramado",
-    type: "Cobertura de Evento",
-    year: "2024",
+    type: "Campanha",
     src: "/videos/Olivas Shortcut.mp4",
     poster: "/images/work-01-poster.png",
   },
   {
     id: "v2",
-    title: "Vídeo 2",
+    title: "Konstanz",
     client: "MKOF Konstanz",
-    type: "Filme de Viagem",
-    year: "2024",
+    type: "Making-of Editorial",
     src: "/videos/Mkof Konstanz Winter.mp4",
     poster: "/images/work-02-poster.png",
   },
   {
     id: "v3",
-    title: "Vídeo 3",
+    title: "Sams Club",
     client: "Zandonai × Sam's Club",
     type: "Comercial",
-    year: "2025",
     src: "/videos/Zandonai+Sams Club.mp4",
     poster: "/images/work-03-poster.png",
   },
   {
     id: "v4",
-    title: "Vídeo 4",
+    title: "Caxiense",
     client: "Autoral",
-    type: "Reel",
-    year: "2025",
+    type: "Institucional",
     src: "/videos/Img 8526.mp4",
     poster: "/images/showreel-poster.png",
   },
