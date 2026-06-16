@@ -33,7 +33,7 @@ export const WORKS: WorkVideo[] = [
     title: "Sams Club",
     client: "Zandonai × Sam's Club",
     type: "Comercial",
-    src: "/videos/Zandonai+Sams Club.mp4",
+    src: "/videos/Zandonai-Sams Club.mp4",
     poster: "/images/work-03-poster.png",
   },
   {

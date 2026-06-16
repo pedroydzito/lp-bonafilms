@@ -29,10 +29,7 @@ export default function CountUp({ value, suffix = "", className, duration = 1.6 
 
   return (
     <span ref={ref} className={className}>
-      {display}
-      {suffix.split('').map((char, i) => 
-        char === '+' ? <span key={i} style={{ color: "#ff3c00" }}>+</span> : char
-      )}
+      {display}{suffix}
     </span>
   );
 }
