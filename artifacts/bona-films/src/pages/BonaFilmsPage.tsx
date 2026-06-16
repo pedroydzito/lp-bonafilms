@@ -51,17 +51,17 @@ const PILLARS = [
   {
     num: "01",
     title: "História primeiro",
-    desc: "Todo vídeo começa numa pergunta: o que essa história quer dizer? Antes da câmera, vem a narrativa.",
+    desc: "Todo vídeo começa numa pergunta: o que essa história quer dizer? A narrativa vem antes da câmera.",
   },
   {
     num: "02",
-    title: "Luz & movimento",
-    desc: "Frames pensados pra durar. Câmera com intenção, luz como linguagem — não como acessório.",
+    title: "Olhar e movimento",
+    desc: "Cada frame é pensado pra durar. A câmera tem intenção e a luz é linguagem, não acessório.",
   },
   {
     num: "03",
     title: "Conexão real",
-    desc: "Briefing é só o começo. A história precisa ser real pra emocionar quem assiste.",
+    desc: "O briefing é só o ponto de partida. A história precisa ser real pra emocionar quem assiste.",
   },
 ];
 
@@ -123,7 +123,7 @@ export default function BonaFilmsPage() {
             <div className="md:col-span-6 md:col-start-7 flex flex-col justify-center">
               <RevealText
                 as="h2"
-                text="Vídeos que ficam na memória."
+                text="O simples também é história."
                 className="font-sans font-bold text-[#0A0A0A] mb-8"
                 style={{
                   fontSize: "clamp(30px,4vw,52px)",
@@ -134,17 +134,19 @@ export default function BonaFilmsPage() {
 
               <motion.div {...fadeUp}>
                 <p className="font-sans text-[17px] md:text-[19px] leading-relaxed text-[#0A0A0A] mb-4">
-                  Bona Films é a produtora audiovisual de{" "}
-                  <span className="font-serif italic">Gustavo Bonadeu</span>.
-                  Videomaker e criador de reels com foco em narrativa visual,
-                  ritmo e emoção.
+                  A Bona Films vem comigo desde o meu início no audiovisual, mas
+                  por muito tempo ficou de lado. Eu era um{" "}
+                  <span className="font-serif italic">filmmaker</span> independente
+                  e não dava atenção a certos detalhes.
                 </p>
                 <p className="font-sans text-[17px] md:text-[19px] leading-relaxed text-[#0A0A0A] mb-4">
-                  Realizamos comerciais, institucionais e conteúdo autoral para
-                  marcas e pessoas.
+                  Com o tempo a gente amadurece, e o desejo de assumir isso como
+                  uma produtora voltou. Dessa vez resolvi ir adiante e colocar
+                  toda a minha energia aqui.
                 </p>
                 <p className="font-sans text-[17px] md:text-[19px] leading-relaxed text-[#0A0A0A]">
-                  Baseados no Rio Grande do Sul. Rodando o Brasil.
+                  Hoje a Bona Films é sobre olhar. Sobre transformar o simples em
+                  história.
                 </p>
               </motion.div>
             </div>
@@ -209,8 +211,7 @@ export default function BonaFilmsPage() {
               className="font-sans text-[15px] md:text-[16px] text-[#F2F2EE]/60 max-w-[300px] md:text-right"
               {...fadeUp}
             >
-              Uma seleção de projetos recentes. Toque para assistir — ou passe
-              o mouse para visualizar.
+              Alguns dos trabalhos que já realizei. Toque para assistir.
             </motion.p>
           </div>
 
@@ -221,10 +222,10 @@ export default function BonaFilmsPage() {
             <div className="md:col-span-6 md:mt-28">
               <VideoCard work={WORKS[1]} index="02" onClick={openModal} />
             </div>
-            <div className="md:col-span-12">
+            <div className="md:col-span-6">
               <VideoCard work={WORKS[2]} index="03" onClick={openModal} />
             </div>
-            <div className="md:col-span-8 md:col-start-3">
+            <div className="md:col-span-6 md:mt-28">
               <VideoCard work={WORKS[3]} index="04" onClick={openModal} />
             </div>
           </div>
@@ -243,7 +244,7 @@ export default function BonaFilmsPage() {
 
           <RevealText
             as="h2"
-            text="Três princípios em cada vídeo que entrego."
+            text="Como eu penso cada vídeo."
             className="font-sans font-bold text-[#0A0A0A] max-w-[860px] mb-16 md:mb-28"
             style={{
               fontSize: "clamp(34px,6vw,84px)",
@@ -293,7 +294,7 @@ export default function BonaFilmsPage() {
 
           <RevealText
             as="h2"
-            text="Vamos fazer algo memorável."
+            text="Vamos criar uma história."
             className="font-sans font-black text-[#F2F2EE] mb-14 md:mb-20"
             style={{
               fontSize: "clamp(48px,11vw,170px)",
@@ -356,8 +357,8 @@ export default function BonaFilmsPage() {
             <div className="font-sans text-[13px] text-[#6B6B66] md:text-center">
               © 2026 Bona Films.<br />Todos os direitos reservados.
             </div>
-            <div className="font-mono text-[12px] text-[#6B6B66] md:text-right leading-relaxed">
-              29.1678° S<br />51.1794° W<br />caxias do sul
+            <div className="font-serif italic text-[15px] text-[#6B6B66] md:text-right leading-relaxed">
+              O simples também<br />é história.
             </div>
           </div>
 

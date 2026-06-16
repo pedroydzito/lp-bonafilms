@@ -79,9 +79,7 @@ export default function CustomCursor() {
             exit={{ scale: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 28 }}
           >
-            <span style={{ display: "block", transform: "translate(14px, 14px)" }}>
-              {label}
-            </span>
+            {label}
           </motion.div>
         )}
       </AnimatePresence>

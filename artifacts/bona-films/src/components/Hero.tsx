@@ -80,7 +80,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 1.2, ease: EASE }}
         >
           <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.12em] text-[#F2F2EE]/70 leading-relaxed">
-            videomaker<br />& criador de reels
+            filmmaker<br />& produtora
           </p>
         </motion.div>
 
@@ -91,7 +91,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 1.3, ease: EASE }}
         >
           <p className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.12em] text-[#F2F2EE]/70 leading-relaxed">
-            caxias do sul — rs<br />rodando o brasil
+            imagem<br />& narrativa
           </p>
         </motion.div>
       </div>
@@ -136,7 +136,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.1, ease: EASE }}
         >
-          Histórias cinematográficas que ficam na memória.
+          O simples também é história. Quando existe olhar.
         </motion.p>
       </motion.div>
 

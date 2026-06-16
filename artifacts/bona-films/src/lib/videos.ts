@@ -25,7 +25,7 @@ export const WORKS: WorkVideo[] = [
   {
     id: "v2",
     title: "Vídeo 2",
-    client: "MKOF — Konstanz",
+    client: "MKOF Konstanz",
     type: "Filme de Viagem",
     year: "2024",
     src: "/videos/Mkof Konstanz Winter.mp4",

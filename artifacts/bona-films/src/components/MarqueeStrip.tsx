@@ -2,7 +2,7 @@ interface MarqueeStripProps {
   reverse?: boolean;
 }
 
-const PHRASE = "VÍDEOS QUE FICAM NA MEMÓRIA";
+const PHRASE = "O SIMPLES TAMBÉM É HISTÓRIA";
 
 export default function MarqueeStrip({ reverse = false }: MarqueeStripProps) {
   const items = Array.from({ length: 8 });

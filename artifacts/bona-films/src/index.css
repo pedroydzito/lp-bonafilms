@@ -291,15 +291,20 @@
   position: fixed;
   top: 0;
   left: 0;
+  margin: 16px 0 0 16px;
   pointer-events: none;
   z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
   font-family: var(--app-font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink);
   background: var(--cream);
-  padding: 7px 12px;
+  padding: 8px 14px;
   border-radius: 9999px;
   white-space: nowrap;
 }
