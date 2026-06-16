@@ -39,8 +39,8 @@ export default function Header() {
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-        className={`fixed top-0 left-0 w-full z-[80] transition-colors duration-300 ${
-          scrolled
+        className={`fixed top-0 left-0 w-full z-[110] transition-colors duration-300 ${
+          scrolled && !menuOpen
             ? "bg-[#F2F2EE]/85 backdrop-blur-md border-b border-[#D4D4CE]"
             : "bg-transparent border-b border-transparent"
         }`}

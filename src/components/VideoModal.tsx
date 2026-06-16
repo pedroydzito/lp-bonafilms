@@ -45,12 +45,12 @@ export default function VideoModal({ src, isOpen, onClose }: VideoModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(10,10,10,0.95)]"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-[rgba(10,10,10,0.95)]"
           onClick={onClose}
           data-testid="video-modal-overlay"
         >
           <button
-            className="absolute top-6 right-6 text-white hover:rotate-90 transition-transform duration-300 z-50"
+            className="absolute top-6 right-6 text-white hover:rotate-90 transition-transform duration-300 z-[200]"
             onClick={onClose}
             data-cursor-label="Fechar"
             data-testid="button-close-modal"

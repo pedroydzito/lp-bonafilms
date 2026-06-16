@@ -73,17 +73,17 @@ export default function VideoCard({ work, index, onClick }: VideoCardProps) {
         <div className="absolute inset-0 bg-[#0A0A0A]/0 group-hover:bg-[#0A0A0A]/15 transition-colors duration-500 pointer-events-none" />
 
         {/* index badge */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="font-mono text-[12px] text-[#F2F2EE] mix-blend-difference">
+        <div className="absolute top-4 left-4 z-10 mix-blend-difference text-white">
+          <span className="font-mono text-[12px]">
             ({index})
           </span>
         </div>
 
         {/* corner arrow */}
-        <div className="absolute top-4 right-4 z-10 overflow-hidden">
+        <div className="absolute top-4 right-4 z-10 overflow-hidden mix-blend-difference text-white">
           <ArrowUpRight
             size={24}
-            className="text-[#F2F2EE] mix-blend-difference transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] translate-x-3 -translate-y-3 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+            className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] translate-x-3 -translate-y-3 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
           />
         </div>
       </div>

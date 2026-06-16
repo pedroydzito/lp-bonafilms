@@ -207,17 +207,17 @@ export default function BonaFilmsPage() {
             </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-14 md:gap-y-28">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-14 md:gap-y-16">
             <div className="md:col-span-6">
               <VideoCard work={WORKS[0]} index="01" onClick={openModal} />
             </div>
-            <div className="md:col-span-6 md:mt-28">
+            <div className="md:col-span-6 md:mt-24">
               <VideoCard work={WORKS[1]} index="02" onClick={openModal} />
             </div>
             <div className="md:col-span-6">
               <VideoCard work={WORKS[2]} index="03" onClick={openModal} />
             </div>
-            <div className="md:col-span-6 md:mt-28">
+            <div className="md:col-span-6 md:mt-24">
               <VideoCard work={WORKS[3]} index="04" onClick={openModal} />
             </div>
           </div>
