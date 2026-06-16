@@ -1,9 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
   "buildCommand": "pnpm --filter @workspace/bona-films run build",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "outputDirectory": "artifacts/bona-films/dist/public",
-  "framework": null,
+  "outputDirectory": "artifacts/bona-films/dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {
