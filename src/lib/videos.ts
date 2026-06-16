@@ -47,6 +47,6 @@ export const WORKS: WorkVideo[] = [
 ];
 
 export const WA_HREF =
-  "https://wa.me/5554997227310?text=Oi%20Gustavo%2C%20vim%20pelo%20site%20da%20Bona%20Films!";
+  "https://wa.me/555499722731?text=Oi%20Gustavo%2C%20vim%20pelo%20site%20da%20Bona%20Films!";
 export const INSTAGRAM_HREF = "https://instagram.com/gbonadeu_";
 export const INSTAGRAM_HANDLE = "@gbonadeu_";
