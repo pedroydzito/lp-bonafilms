@@ -30,8 +30,8 @@ export default function Header() {
     };
   }, [menuOpen]);
 
-  // header is over the dark hero at top -> light text; after scroll -> cream bg, dark text
-  const onDark = !scrolled && !menuOpen;
+  // header is over the dark hero at top or menu open -> light text; after scroll -> cream bg, dark text
+  const onDark = !scrolled || menuOpen;
 
   return (
     <>
