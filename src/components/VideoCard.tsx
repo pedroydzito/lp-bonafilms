@@ -43,7 +43,7 @@ export default function VideoCard({ work, index, onClick }: VideoCardProps) {
       viewport={{ once: true, amount: 0.2 }}
     >
       <div
-        className="relative w-full overflow-hidden bg-[#0A0A0A] aspect-video"
+        className="relative w-full overflow-hidden bg-[#F2F2EE] aspect-video"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
