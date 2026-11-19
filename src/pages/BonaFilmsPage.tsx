@@ -208,18 +208,19 @@ export default function BonaFilmsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-14 md:gap-y-16">
-            <div className="md:col-span-6">
-              <VideoCard work={WORKS[0]} index="01" onClick={openModal} />
-            </div>
-            <div className="md:col-span-6 md:mt-24">
-              <VideoCard work={WORKS[1]} index="02" onClick={openModal} />
-            </div>
-            <div className="md:col-span-6">
-              <VideoCard work={WORKS[2]} index="03" onClick={openModal} />
-            </div>
-            <div className="md:col-span-6 md:mt-24">
-              <VideoCard work={WORKS[3]} index="04" onClick={openModal} />
-            </div>
+            {WORKS.map((work, i) => {
+              const isLastAlone = i === WORKS.length - 1 && WORKS.length % 2 === 1;
+              const cls = isLastAlone
+                ? "md:col-span-6 md:col-start-4"
+                : i % 2 === 1
+                  ? "md:col-span-6 md:mt-24"
+                  : "md:col-span-6";
+              return (
+                <div key={work.id} className={cls}>
+                  <VideoCard work={work} index={String(i + 1).padStart(2, "0")} onClick={openModal} />
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
