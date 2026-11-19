@@ -21,6 +21,14 @@ export const WORKS: WorkVideo[] = [
     poster: "/images/work-03-poster.png",
   },
   {
+    id: "v5",
+    title: "Evento",
+    client: "O Lorde Music Festival",
+    type: "Entregas em real time",
+    src: "/videos/Evento.mp4",
+    poster: "/images/work-05-poster.jpg",
+  },
+  {
     id: "v2",
     title: "Konstanz",
     client: "MKOF Konstanz",
